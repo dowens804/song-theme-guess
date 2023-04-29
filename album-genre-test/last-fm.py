@@ -1603,7 +1603,6 @@ class LastFM(Proxy_Checker):
                     if flag ==0:
                         return '0'
             except Exception as E:
-                print(E)
                 self.az_logger.debug('Something Went Wrong -> {} using  Proxy -> {} Error -> {} on try-> {}'.format(url,proxy,E,flag))
                 flag -= 1
                 if flag == 0:
@@ -1648,7 +1647,17 @@ class LastFM(Proxy_Checker):
                 return '0'
         else:
             return '0'
-            
+    
+
+    def get_all_urls_not_updated(self):
+        unsuccess = []
+        for list_batch in self.lastfm_data['simple_urls']:
+            if list_batch not in self.lastfm_genre['completed']:
+                unsuccess.append(list_batch)
+                
+        print(len(unsuccess))
+        
+    
     async def get_batch_genres(self):
         #get all songs we did not 
         unsuccess = []
@@ -1696,10 +1705,30 @@ class LastFM(Proxy_Checker):
 if __name__ == "__main__":
 
     last_fm = LastFM()
-    #last_fm.add_urls_from_lyric_data()
+    #last_fm.get_all_urls_not_updated()
     
     #last_fm.lastfm_genre_by_list("New")
     #link = "https://www.last.fm/music/Beyonc%C3%A9/_/Naughty+Girl/+tags"
     #test = last_fm.genre_data_from_link(link)
     #print(test)
-    last_fm.start_scrapping()
+    #last_fm.start_scrapping()
+    
+    user = input("Enter command or 'help' : ")
+    while user != 'end':
+        
+        if user == 'help':
+            print("'gcount : get the count of remaining genere calls'")
+            print("'gdata' : start collecting data")
+            print("'end' : end script")
+            
+        elif user == 'gcount':
+            last_fm.get_all_urls_not_updated()
+            
+        elif user == 'gdata':
+            last_fm.start_scrapping()
+            
+        else:
+            print("invlaid command : "+ user)
+            
+        user = input("Enter command or 'help' : ")  
+            
